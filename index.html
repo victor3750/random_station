@@ -139,35 +139,44 @@
 
         // 抽取車站邏輯
         drawBtn.addEventListener('click', () => {
-            if (filteredStations.length > 0) {
-                let duration = 4500; // 總持續時間為4.5秒
-                let interval = 50; // 初始間隔時間
-                let startTime = Date.now();
+    if (filteredStations.length > 0) {
+        // 禁用抽取按鈕
+        drawBtn.disabled = true;
+        drawBtn.style.opacity = '0.5';
+        drawBtn.style.cursor = 'not-allowed';
 
-                function showRandomStation() {
-                    const randomIndex = Math.floor(Math.random() * filteredStations.length);
-                    const randomStation = filteredStations[randomIndex];
-                    stationResult.innerHTML = `抽到的車站是：<span class="random_station">${randomStation}</span>`;
+        let duration = 4500; // 總持續時間為4.5秒
+        let interval = 50; // 初始間隔時間
+        let startTime = Date.now();
 
-                    let elapsedTime = Date.now() - startTime;
-                    if (elapsedTime < duration) {
-                        // 計算下一次間隔時間，使速度逐漸變慢
-                        interval *= 1.07;
-                        setTimeout(showRandomStation, interval);
-                    } else {
-                        // 抽取完畢後加上左右抖動動畫
-                        stationResult.classList.add('shake');
-                        setTimeout(() => {
-                            stationResult.classList.remove('shake');
-                        }, 500); // 抖動動畫持續0.5秒
-                    }
-                }
+        function showRandomStation() {
+            const randomIndex = Math.floor(Math.random() * filteredStations.length);
+            const randomStation = filteredStations[randomIndex];
+            stationResult.innerHTML = `抽到的車站是：<span class="random_station">${randomStation}</span>`;
 
-                showRandomStation();
+            let elapsedTime = Date.now() - startTime;
+            if (elapsedTime < duration) {
+                // 計算下一次間隔時間，使速度逐漸變慢
+                interval *= 1.07;
+                setTimeout(showRandomStation, interval);
             } else {
-                stationResult.innerHTML = '請選擇至少一個縣市。';
+                // 抽取完畢後加上左右抖動動畫
+                stationResult.classList.add('shake');
+                setTimeout(() => {
+                    stationResult.classList.remove('shake');
+                    // 重新啟用抽取按鈕
+                    drawBtn.disabled = false;
+                    drawBtn.style.opacity = '1';
+                    drawBtn.style.cursor = 'pointer';
+                }, 500); // 抖動動畫持續0.5秒
             }
-        });
+        }
+
+        showRandomStation();
+    } else {
+        stationResult.innerHTML = '請選擇至少一個縣市。';
+    }
+});
     </script>
 </body>
 </html>
